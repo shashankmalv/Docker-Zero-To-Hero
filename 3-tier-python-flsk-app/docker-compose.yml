@@ -1,0 +1,29 @@
+services:
+
+  web:
+    build: ./app
+    ports:
+      - 5000:5000
+    environment:
+      DB_HOST: db
+      CACHE_HOST: redis
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: flaskdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+
+volumes:
+  postgres_data:
+
+
