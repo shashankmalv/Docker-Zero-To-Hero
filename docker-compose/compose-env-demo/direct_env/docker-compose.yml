@@ -1,0 +1,9 @@
+services:
+  app:
+    image: nginx
+    container_name: env-nginx
+    ports:
+      - 80:80
+    environment:
+      APP_ENV: development
+      APP_VERSION: 1.0e 

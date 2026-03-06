@@ -1,0 +1,9 @@
+services:
+  app:
+    image: nginx
+    container_name: env-nginx
+    ports:
+      - ${PORT}:80
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
