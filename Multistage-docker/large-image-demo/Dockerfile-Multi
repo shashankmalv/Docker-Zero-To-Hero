@@ -1,0 +1,24 @@
+# ---------- Stage 1 : Builder ----------
+FROM node:20-alpine As builder
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install --omit=dev
+
+COPY . .
+
+# ---------- Stage 2 : Distroless Runtime ----------
+FROM gcr.io/distroless/nodejs18-debian11
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+#Run as noon-Root user
+USER nonroot
+
+EXPOSE 3000
+
+CMD ["app.js"]
