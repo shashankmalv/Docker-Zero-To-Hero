@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+
+  app:
+    build: .
+    container_name: nodejs-app
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_DB=${MONGO_DB}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - devops-network
+
+  mongo:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - devops-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo-data:
+
+networks:
+  devops-network:
+    driver: bridge
